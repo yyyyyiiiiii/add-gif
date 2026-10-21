@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import process from 'node:process'
 
 function createWindow(): void {
   // Create the browser window.
@@ -35,6 +36,8 @@ function createWindow(): void {
   }
 }
 
+const GIFTBOX_API_KEY = process.env.GIFTBOX_API_KEY;
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -51,6 +54,19 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.on('search', async (event, query: string) => {
+    try {
+      const response = await fetch(`https://compat.gifbox.me/v2/search?key=${GIFTBOX_API_KEY}&q=${query}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      event.reply('search-result', data);
+    } catch (error) {
+      console.error('Error during search:', error);
+      event.reply('search-error', error);
+    }
+  });
 
   createWindow()
 
