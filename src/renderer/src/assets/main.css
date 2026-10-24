@@ -169,3 +169,32 @@ code {
     display: none;
   }
 }
+
+.scrollable-list {
+  height: 240px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.scrollable-list__item {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  border-bottom: 1px solid #e5e7eb;
+  background: white;
+  color: #111827;
+  text-align: left;
+  cursor: pointer;
+}
+
+.scrollable-list__item:hover,
+.scrollable-list__item.is-selected {
+  background: #f3f4f6;
+}
+
+.scrollable-list__item:last-child {
+  border-bottom: 0;
+}

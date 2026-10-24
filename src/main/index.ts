@@ -36,7 +36,7 @@ function createWindow(): void {
   }
 }
 
-const GIFTBOX_API_KEY = process.env.GIFTBOX_API_KEY;
+const GIFTBOX_API_KEY = process.env.GIFTBOX_API_KEY
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -56,17 +56,19 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
   ipcMain.on('search', async (event, query: string) => {
     try {
-      const response = await fetch(`https://compat.gifbox.me/v2/search?key=${GIFTBOX_API_KEY}&q=${query}`);
+      const response = await fetch(
+        `https://compat.gifbox.me/v2/search?key=${GIFTBOX_API_KEY}&q=${query}`
+      )
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
-      const data = await response.json();
-      event.reply('search-result', data);
+      const data = await response.json()
+      event.reply('search-result', data)
     } catch (error) {
-      console.error('Error during search:', error);
-      event.reply('search-error', error);
+      console.error('Error during search:', error)
+      event.reply('search-error', error)
     }
-  });
+  })
 
   createWindow()
 
