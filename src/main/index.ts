@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import process from 'node:process'
-import { GifboxSearch } from '../renderer/src/gifbox'
+import { GifboxSearch } from '../gifbox/gifbox'
 
 function createWindow(): void {
   // Create the browser window.
@@ -54,10 +54,13 @@ app.whenReady().then(() => {
   })
 
   // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-  ipcMain.on('search', async (event, query: string) => {
+  ipcMain.on('search', async (event, query: string, next: string | undefined) => {
     try {
-      const data = await GifboxSearch(GIFTBOX_API_KEY, query)
+      const data = await GifboxSearch({
+        key: GIFTBOX_API_KEY,
+        q: query,
+        ...(next !== undefined ? { pos: next } : {})
+      })
       event.reply('search-result', data)
     } catch (error) {
       console.error('Error during search:', error)
