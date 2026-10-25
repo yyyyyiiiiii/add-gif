@@ -47,12 +47,13 @@ function App(): JSX.Element {
       setSearchState((current) => ({ ...current, req: false }))
     }
 
-    window.electron.ipcRenderer.on('search-result', handleSearchResult)
-    window.electron.ipcRenderer.on('search-error', handleSearchError)
+    const unsubscriptions = [
+      window.electron.ipcRenderer.on('search-result', handleSearchResult),
+      window.electron.ipcRenderer.on('search-error', handleSearchError)
+    ]
 
     return () => {
-      window.electron.ipcRenderer.removeListener('search-result', handleSearchResult)
-      window.electron.ipcRenderer.removeListener('search-error', handleSearchError)
+      unsubscriptions.forEach((unsubscribe) => unsubscribe())
     }
   }, [])
 
