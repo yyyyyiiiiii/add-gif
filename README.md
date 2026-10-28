@@ -9,7 +9,7 @@ Pulling gifs. Now only `gifbox.me` supported
 ### Install
 
 ```bash
-$ npm install
+npm install
 ```
 
 ### Keys
@@ -17,7 +17,7 @@ $ npm install
 Before dev / build, export API key for requests making
 
 ```bash
-export GIFTBOX_API_KEY=`${YOUR_API_KEY}
+export GIFTBOX_API_KEY=`${YOUR_API_KEY}`
 ```
 
 ### Development
@@ -28,17 +28,17 @@ npm run dev
 
 ### Build
 
+#### For windows
 ```bash
-# For windows
 npm run build:win
 ```
 
+#### For macOS
 ```bash
-# For macOS
 npm run build:mac
 ```
 
+#### For Linux
 ```bash
-# For Linux
 npm run build:linux
 ```
