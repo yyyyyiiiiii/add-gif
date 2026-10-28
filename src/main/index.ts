@@ -83,7 +83,7 @@ app.whenReady().then(() => {
         q: query,
         ...(next !== undefined ? { pos: next } : {})
       })
-      event.reply('search-result', data)
+      event.reply('search-result', { query, items: data })
     } catch (error) {
       console.error('Error during search:', error)
       event.reply('search-error', error)

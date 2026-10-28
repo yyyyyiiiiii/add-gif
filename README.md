@@ -29,16 +29,19 @@ npm run dev
 ### Build
 
 #### For windows
+
 ```bash
 npm run build:win
 ```
 
 #### For macOS
+
 ```bash
 npm run build:mac
 ```
 
 #### For Linux
+
 ```bash
 npm run build:linux
 ```

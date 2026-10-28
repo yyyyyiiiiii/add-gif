@@ -24,9 +24,13 @@ function App(): JSX.Element {
   const pendingRequest = useRef<PendingRequest | null>(null)
 
   useEffect(() => {
-    const handleSearchResult = (_event: unknown, items: GifboxItems): void => {
+    const handleSearchResult = (
+      _event: unknown,
+      result: { query: string; items: GifboxItems }
+    ): void => {
+      const { query, items } = result
       const request = pendingRequest.current
-      if (!request) return
+      if (!request || request.query !== query) return
 
       if (request.append) {
         setGifboxItems((currentItems) => ({
