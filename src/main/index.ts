@@ -1,9 +1,11 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import process from 'node:process'
-import { GifboxSearch } from '../gifbox/gifbox'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { GifboxItem, GifboxSearch, GifboxMediaFormats } from '../gifbox/gifbox'
 
 function createWindow(): void {
   // Create the browser window.
@@ -39,6 +41,26 @@ function createWindow(): void {
 
 const GIFTBOX_API_KEY: string = process.env.GIFTBOX_API_KEY || ''
 
+const GIFBOX_MEDIA_FORMAT_INFO = {
+  loopedmp4: { label: 'MP4 video', ext: 'mp4' },
+  mp4: { label: 'MP4 video', ext: 'mp4' },
+  tinymp4: { label: 'MP4 video', ext: 'mp4' },
+  nanomp4: { label: 'MP4 video', ext: 'mp4' },
+  webm: { label: 'WebM video', ext: 'webm' },
+  tinywebm: { label: 'WebM video', ext: 'webm' },
+  nanowebm: { label: 'WebM video', ext: 'webm' },
+  gif: { label: 'GIF image', ext: 'gif' },
+  mediumgif: { label: 'GIF image', ext: 'gif' },
+  tinygif: { label: 'GIF image', ext: 'gif' },
+  nanogif: { label: 'GIF image', ext: 'gif' }
+} as const
+
+type GifUrls = {
+  mp4?: Array<string>
+  webm?: Array<string>
+  gif?: Array<string>
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -65,6 +87,52 @@ app.whenReady().then(() => {
     } catch (error) {
       console.error('Error during search:', error)
       event.reply('search-error', error)
+    }
+  })
+
+  ipcMain.on('save', async (event, item: GifboxItem) => {
+    try {
+      const available = Object.entries(GIFBOX_MEDIA_FORMAT_INFO).flatMap(([key, info]) => {
+        const url = item.media_formats?.[key as keyof GifboxMediaFormats]?.url
+        return url ? [{ key, url, ...info }] : []
+      })
+
+      if (available.length === 0) {
+        event.reply('save-error', 'No downloadable formats available')
+        return
+      }
+
+      const urls: GifUrls = available.reduce((acc, cur) => {
+        if (acc?.[cur.ext] !== undefined) acc[cur.ext].push(cur.url)
+        else acc[cur.ext] = [cur.url]
+        return acc
+      }, {})
+
+      const { canceled, filePath } = await dialog.showSaveDialog({
+        defaultPath: item.title + '.gif' || 'media'
+      })
+
+      if (canceled || !filePath) return
+
+      const ext = path.extname(filePath).replace('.', '')
+
+      if (!urls[ext]) {
+        console.error(`No downloadable extension available: ${ext}`)
+        event.reply('save-error', `No downloadable extension available: ${ext}`)
+        return
+      }
+
+      const item_url = urls[ext][0]
+      const response = await fetch(item_url)
+      if (!response.ok) throw new Error(`Download failed: ${response.status}`)
+
+      const bytes = await response.arrayBuffer()
+
+      await fs.writeFile(filePath, Buffer.from(bytes))
+      event.reply('save-result', 'good')
+    } catch (error) {
+      console.error('Error saving media:', error)
+      event.reply('save-error', error instanceof Error ? error.message : String(error))
     }
   })
 

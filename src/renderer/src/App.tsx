@@ -110,6 +110,37 @@ function App(): JSX.Element {
               playsInline
               preload="metadata"
             />
+
+            <div className="gif-actions">
+              <button
+                type="button"
+                className="gif-action"
+                aria-label="Copy Gif"
+                onClick={async () => {
+                  // TODO: do smth
+                  console.error("it isn't supported now")
+                }}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="8" y="8" width="12" height="12" rx="2" />
+                  <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
+                </svg>
+                <span>Copy</span>
+              </button>
+
+              <button
+                type="button"
+                className="gif-action"
+                aria-label="Save Gif"
+                onClick={() => window.electron.ipcRenderer.send('save', item)}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v12m0 0 5-5m-5 5-5-5" />
+                  <path d="M5 17v3h14v-3" />
+                </svg>
+                <span>Save</span>
+              </button>
+            </div>
           </div>
         ))}
       </div>

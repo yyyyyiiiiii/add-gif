@@ -6,16 +6,18 @@ export type GifboxMedia = {
 }
 
 export type GifboxMediaFormats = {
+  loopedmp4: GifboxMedia
+  gif?: GifboxMedia
   mp4: GifboxMedia
-  gif: GifboxMedia
   preview: GifboxMedia
   webm: GifboxMedia
-  mediumgif: GifboxMedia
-  loopedmp4: GifboxMedia
-  tinymp4: GifboxMedia
-  nanomp4: GifboxMedia
-  tinywebm: GifboxMedia
-  nanowebm: GifboxMedia
+  mediumgif?: GifboxMedia
+  tinygif?: GifboxMedia
+  tinymp4?: GifboxMedia
+  tinywebm?: GifboxMedia
+  nanogif?: GifboxMedia
+  nanomp4?: GifboxMedia
+  nanowebm?: GifboxMedia
 }
 
 export type GifboxItem = {
