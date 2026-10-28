@@ -90,6 +90,7 @@ app.whenReady().then(() => {
     }
   })
 
+  // TODO: make it less miserable
   ipcMain.on('save', async (event, item: GifboxItem) => {
     try {
       const available = Object.entries(GIFBOX_MEDIA_FORMAT_INFO).flatMap(([key, info]) => {
