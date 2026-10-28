@@ -116,7 +116,7 @@ function App(): JSX.Element {
         {items.results.map((item) => (
           <div className="gif-tile" key={item.id}>
             <video
-              src={item.media_formats.webm.url}
+              src={item.media_formats.loopedmp4.url}
               poster={item.media_formats.preview.url}
               autoPlay
               muted
