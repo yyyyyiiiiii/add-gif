@@ -43,13 +43,23 @@ function App(): JSX.Element {
 
     const handleSearchError = (_event: unknown, error: unknown): void => {
       console.error('Search error received:', error)
+      const message = error instanceof Error ? error.message : String(error)
+      window.alert(`Search failed: ${message}`)
+
       pendingRequest.current = null
       setSearchState((current) => ({ ...current, req: false }))
     }
 
+    const handleSaveError = (_event: unknown, error: unknown): void => {
+      console.error('Save error received:', error)
+      const message = error instanceof Error ? error.message : String(error)
+      window.alert(`Search failed: ${message}`)
+    }
+
     const unsubscriptions = [
       window.electron.ipcRenderer.on('search-result', handleSearchResult),
-      window.electron.ipcRenderer.on('search-error', handleSearchError)
+      window.electron.ipcRenderer.on('search-error', handleSearchError),
+      window.electron.ipcRenderer.on('save-error', handleSaveError)
     ]
 
     return () => {
@@ -119,6 +129,9 @@ function App(): JSX.Element {
                 onClick={async () => {
                   // TODO: do smth
                   console.error("it isn't supported now")
+                  window.alert(
+                    `Copying isn't supported, because i still not figured that 'MEME' types`
+                  )
                 }}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">

@@ -117,11 +117,11 @@ app.whenReady().then(() => {
 
       const ext = path.extname(filePath).replace('.', '')
 
-      if (!urls[ext]) {
-        console.error(`No downloadable extension available: ${ext}`)
-        event.reply('save-error', `No downloadable extension available: ${ext}`)
-        return
-      }
+      if (!urls[ext])
+        throw new Error(
+          `No downloadable extension available: ${ext},
+available: ${String(Object.keys(urls))}`
+        )
 
       const item_url = urls[ext][0]
       const response = await fetch(item_url)
