@@ -2,6 +2,8 @@
 
 Pulling gifs. Now only `gifbox.me` supported
 
+![App screenshot](./screenshots/app.png)
+
 ## Project Setup
 
 ### Install
